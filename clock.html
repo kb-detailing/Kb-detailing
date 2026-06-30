@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Clock - Multiple Time Zones</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .clock-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .clock-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .city-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #00d4ff;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .timezone {
+            font-size: 0.85rem;
+            color: #b0b0b0;
+            margin-bottom: 15px;
+        }
+
+        .digital-time {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #ffffff;
+            letter-spacing: 3px;
+            font-variant-numeric: tabular-nums;
+            margin-bottom: 10px;
+        }
+
+        .period {
+            font-size: 0.9rem;
+            color: #00d4ff;
+            margin-top: 8px;
+        }
+
+        .analog-clock {
+            width: 150px;
+            height: 150px;
+            border: 3px solid #00d4ff;
+            border-radius: 50%;
+            margin: 20px auto;
+            position: relative;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .clock-center {
+            width: 10px;
+            height: 10px;
+            background: #00d4ff;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+
+        .hand {
+            position: absolute;
+            bottom: 50%;
+            left: 50%;
+            transform-origin: bottom center;
+        }
+
+        .hour-hand {
+            width: 4px;
+            height: 35px;
+            background: #00d4ff;
+            margin-left: -2px;
+        }
+
+        .minute-hand {
+            width: 3px;
+            height: 50px;
+            background: #00ff88;
+            margin-left: -1.5px;
+        }
+
+        .second-hand {
+            width: 2px;
+            height: 55px;
+            background: #ff0055;
+            margin-left: -1px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            grid-column: 1 / -1;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: #b0b0b0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .digital-time {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⏰ World Clock</h1>
+            <p>Current time across different time zones</p>
+        </div>
+
+        <div id="clocks-container"></div>
+    </div>
+
+    <script>
+        const timezones = [
+            { city: 'New York', tz: 'America/New_York' },
+            { city: 'London', tz: 'Europe/London' },
+            { city: 'Tokyo', tz: 'Asia/Tokyo' },
+            { city: 'Sydney', tz: 'Australia/Sydney' },
+            { city: 'Dubai', tz: 'Asia/Dubai' },
+            { city: 'Singapore', tz: 'Asia/Singapore' },
+            { city: 'Paris', tz: 'Europe/Paris' },
+            { city: 'Hong Kong', tz: 'Asia/Hong_Kong' },
+            { city: 'Los Angeles', tz: 'America/Los_Angeles' },
+            { city: 'Mumbai', tz: 'Asia/Kolkata' },
+            { city: 'Bangkok', tz: 'Asia/Bangkok' },
+            { city: 'Toronto', tz: 'America/Toronto' }
+        ];
+
+        function createClockCard(city, timezone) {
+            return `
+                <div class="clock-card">
+                    <div class="city-name">${city}</div>
+                    <div class="timezone">${timezone}</div>
+                    <div class="analog-clock">
+                        <div class="hand hour-hand" id="hour-${city}"></div>
+                        <div class="hand minute-hand" id="minute-${city}"></div>
+                        <div class="hand second-hand" id="second-${city}"></div>
+                        <div class="clock-center"></div>
+                    </div>
+                    <div class="digital-time" id="time-${city}">00:00:00</div>
+                    <div class="period" id="period-${city}">AM</div>
+                </div>
+            `;
+        }
+
+        function updateClocks() {
+            const now = new Date();
+
+            timezones.forEach(({ city, tz }) => {
+                // Get time in specific timezone
+                const formatter = new Intl.DateTimeFormat('en-US', {
+                    timeZone: tz,
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false
+                });
+
+                const parts = formatter.formatToParts(now);
+                let hour = parts.find(p => p.type === 'hour').value;
+                let minute = parts.find(p => p.type === 'minute').value;
+                let second = parts.find(p => p.type === 'second').value;
+
+                hour = parseInt(hour);
+                minute = parseInt(minute);
+                second = parseInt(second);
+
+                // Update digital time
+                const timeElement = document.getElementById(`time-${city}`);
+                if (timeElement) {
+                    timeElement.textContent = 
+                        `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}:${String(second).padStart(2, '0')}`;
+                }
+
+                // Update period (AM/PM)
+                const periodElement = document.getElementById(`period-${city}`);
+                if (periodElement) {
+                    periodElement.textContent = hour >= 12 ? 'PM' : 'AM';
+                }
+
+                // Update analog clock hands
+                const hourHand = document.getElementById(`hour-${city}`);
+                const minuteHand = document.getElementById(`minute-${city}`);
+                const secondHand = document.getElementById(`second-${city}`);
+
+                if (hourHand) {
+                    const hourDegrees = (hour % 12 + minute / 60) * 30;
+                    hourHand.style.transform = `rotate(${hourDegrees}deg)`;
+                }
+
+                if (minuteHand) {
+                    const minuteDegrees = (minute + second / 60) * 6;
+                    minuteHand.style.transform = `rotate(${minuteDegrees}deg)`;
+                }
+
+                if (secondHand) {
+                    const secondDegrees = second * 6;
+                    secondHand.style.transform = `rotate(${secondDegrees}deg)`;
+                }
+            });
+        }
+
+        // Initialize clocks on page load
+        function initializeClocks() {
+            const container = document.getElementById('clocks-container');
+            timezones.forEach(({ city, tz }) => {
+                container.innerHTML += createClockCard(city, tz);
+            });
+            updateClocks();
+        }
+
+        // Update clocks every second
+        setInterval(updateClocks, 1000);
+
+        // Initialize on load
+        window.addEventListener('load', initializeClocks);
+    </script>
+</body>
+</html>
