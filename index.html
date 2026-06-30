@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Black Shine Detailing</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial,sans-serif;
+    background:#0b0b0b;
+    color:white;
+    scroll-behavior:smooth;
+}
+
+header{
+    height:100vh;
+    background:
+    linear-gradient(rgba(0,0,0,.7),rgba(0,0,0,.8)),
+    url('https://images.unsplash.com/photo-1503376780353-7e6692767b70');
+    background-size:cover;
+    background-position:center;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+}
+
+.hero h1{
+    font-size:4rem;
+}
+
+.hero p{
+    margin-top:20px;
+    color:#bbb;
+    font-size:1.2rem;
+}
+
+.btn{
+    display:inline-block;
+    margin-top:25px;
+    padding:14px 30px;
+    background:white;
+    color:black;
+    text-decoration:none;
+    border-radius:30px;
+    font-weight:bold;
+}
+
+section{
+    padding:80px 10%;
+}
+
+h2{
+    margin-bottom:30px;
+    font-size:2rem;
+}
+
+.grid{
+    display:flex;
+    gap:25px;
+    flex-wrap:wrap;
+}
+
+.card{
+    background:#161616;
+    padding:25px;
+    border-radius:15px;
+    flex:1;
+    min-width:250px;
+}
+
+.price{
+    font-size:1.5rem;
+    margin-top:15px;
+    font-weight:bold;
+}
+
+.gallery{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:20px;
+}
+
+.gallery img{
+    width:100%;
+    border-radius:15px;
+    height:250px;
+    object-fit:cover;
+}
+
+.contact-box{
+    background:#161616;
+    padding:40px;
+    border-radius:20px;
+    text-align:center;
+}
+
+.contact-box p{
+    margin:10px 0;
+    font-size:1.1rem;
+}
+
+iframe{
+    width:100%;
+    height:400px;
+    border:none;
+    border-radius:20px;
+    margin-top:20px;
+}
+
+footer{
+    text-align:center;
+    padding:30px;
+    color:#666;
+}
+</style>
+</head>
+<body>
+
+<header>
+    <div class="hero">
+        <h1>Black Shine Detailing</h1>
+        <p>Profesjonalny detailing samochodowy • Starogard Gdański • Tczew</p>
+        <a href="#kontakt" class="btn">Umów wizytę</a>
+    </div>
+</header>
+
+<section>
+    <h2>Usługi</h2>
+    <div class="grid">
+        <div class="card">
+            <h3>Mycie detailingowe</h3>
+            <p>Kompleksowe czyszczenie wnętrza i karoserii.</p>
+        </div>
+
+        <div class="card">
+            <h3>Korekta lakieru</h3>
+            <p>Usuwanie rys i odświeżenie lakieru.</p>
+        </div>
+
+        <div class="card">
+            <h3>Powłoka ceramiczna</h3>
+            <p>Ochrona lakieru i maksymalny połysk.</p>
+        </div>
+    </div>
+</section>
+
+<section>
+    <h2>Cennik</h2>
+    <div class="grid">
+        <div class="card">
+            <h3>Pakiet Basic</h3>
+            <p>Mycie zewnętrzne + wnętrze</p>
+            <div class="price">150 zł</div>
+        </div>
+
+        <div class="card">
+            <h3>Pakiet Premium</h3>
+            <p>Detailing wnętrza + mycie + wosk</p>
+            <div class="price">350 zł</div>
+        </div>
+
+        <div class="card">
+            <h3>Korekta lakieru</h3>
+            <p>Jednoetapowa korekta</p>
+            <div class="price">600 zł</div>
+        </div>
+
+        <div class="card">
+            <h3>Powłoka ceramiczna</h3>
+            <p>Ochrona do 3 lat</p>
+            <div class="price">1200 zł</div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <h2>Galeria</h2>
+    <div class="gallery">
+        <img src="https://images.unsplash.com/photo-1607861716497-e65ab29fc7ac">
+        <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d">
+        <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7">
+        <img src="https://images.unsplash.com/photo-1502877338535-766e1452684a">
+    </div>
+</section>
+
+<section id="kontakt">
+    <div class="contact-box">
+        <h2>Kontakt</h2>
+        <p>📍 Obsługujemy okolice Starogard Gdański / Tczew</p>
+        <p>📞 534 360 480</p>
+        <p>📷 Instagram: @twoj_instagram</p>
+
+        <a href="tel:534360480" class="btn">Zadzwoń</a>
+        <a href="https://instagram.com/twoj_instagram" class="btn">Instagram</a>
+    </div>
+</section>
+
+<section>
+    <h2>Mapa dojazdu</h2>
+    <iframe 
+    src="https://www.google.com/maps?q=Starogard%20Gdański,Tczew&output=embed">
+    </iframe>
+</section>
+
+<footer>
+    © 2026 Black Shine Detailing
+</footer>
+
+</body>
+</html>
